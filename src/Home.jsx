@@ -29,7 +29,6 @@ export default function Home() {
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             My Frontend 1.0
           </Typography>
-
           <Button
             color="inherit"
             onClick={() => {
@@ -38,14 +37,22 @@ export default function Home() {
           >
             Item
           </Button>
-
+          {user._id == "-1" && (
+            <Button
+              color="inherit"
+              onClick={() => {
+                navigate("/user");
+              }}
+            >
+              User
+            </Button>
+          )}
           <Button
             color="inherit"
             onClick={async () => {
               const result = await fetch(`${API_URL}/api/auth/logout`, {
                 credentials: "include",
               });
-
               if (result.ok) {
                 window.location.reload(true);
               }
@@ -55,10 +62,9 @@ export default function Home() {
           </Button>
         </Toolbar>
       </AppBar>
-
       <Box sx={{ px: 2, pt: 2 }}>
         <Outlet />
       </Box>
     </div>
   );
-}
+} 

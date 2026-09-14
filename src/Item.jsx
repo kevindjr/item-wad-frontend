@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,6 +20,7 @@ export default function Item() {
     const [items, setItems] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [newItemCategroy, setNewItemCategory] = useState("");
+
     const newItemName = useRef(null);
     const newItemPrice = useRef(null);
     const newItemAmount = useRef(null);
@@ -54,6 +53,7 @@ export default function Item() {
 
     useEffect(() => {
         if (isInit.current) return;
+
         isInit.current = true;
         loadItems();
     }, []);
@@ -61,7 +61,9 @@ export default function Item() {
     const loadItems = async () => {
         const fetchResult = await fetch(`${API_URL}/api/item`, {
             method: "GET",
+            credentials: "include",
         });
+
         if (fetchResult.ok) {
             const data = await fetchResult.json();
             setItems(data.itemList);
@@ -85,25 +87,34 @@ export default function Item() {
         const category = newItemCategroy;
         const price = newItemPrice.current.value;
         const amount = newItemAmount.current.value;
+
         const newItem = {
             name: name,
             category: category,
             price: price,
             amount: amount,
         };
+
         const addItemResult = await fetch(`${API_URL}/api/item`, {
             body: JSON.stringify(newItem),
             method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
+
         if (addItemResult.ok) {
             await loadItems();
         }
+
         closeDialog();
     };
 
     const onItemDelete = async (rowId) => {
         const deleteResult = await fetch(`${API_URL}/api/item/${rowId}`, {
             method: "DELETE",
+            credentials: "include",
         });
 
         if (deleteResult.ok) {
@@ -114,7 +125,10 @@ export default function Item() {
     return (
         <div>
             <div className="flex justify-between items-center mb-4 px-1">
-                <Typography variant="h6">Items</Typography>
+                <Typography variant="h6">
+                    Items
+                </Typography>
+
                 <Button
                     variant="contained"
                     onClick={() => {
@@ -124,12 +138,25 @@ export default function Item() {
                     Add Item
                 </Button>
             </div>
-            <DataGrid rows={items} columns={cols} getRowId={(row) => row._id} />
-            <Dialog open={openDialog} onClose={closeDialog} fullWidth>
+
+            <DataGrid
+                rows={items}
+                columns={cols}
+                getRowId={(row) => row._id}
+            />
+
+            <Dialog
+                open={openDialog}
+                onClose={closeDialog}
+                fullWidth
+            >
                 <DialogContent>
                     <DialogContentText sx={{ mb: 1 }}>
-                        <Typography variant="h6">Add New Item</Typography>
+                        <Typography variant="h6">
+                            Add New Item
+                        </Typography>
                     </DialogContentText>
+
                     <div className="flex flex-col gap-2">
                         <TextField
                             required
@@ -138,8 +165,12 @@ export default function Item() {
                             defaultValue=""
                             inputRef={newItemName}
                         />
+
                         <FormControl fullWidth>
-                            <InputLabel id="label-item-category">Item Category</InputLabel>
+                            <InputLabel id="label-item-category">
+                                Item Category
+                            </InputLabel>
+
                             <Select
                                 labelId="label-item-category"
                                 id="item-category"
@@ -147,11 +178,20 @@ export default function Item() {
                                 label="Item Category"
                                 onChange={onCategoryChange}
                             >
-                                <MenuItem value="Appliance">Appliance</MenuItem>
-                                <MenuItem value="Gadget">Gadget</MenuItem>
-                                <MenuItem value="Headphone">Headphone</MenuItem>
+                                <MenuItem value="Appliance">
+                                    Appliance
+                                </MenuItem>
+
+                                <MenuItem value="Gadget">
+                                    Gadget
+                                </MenuItem>
+
+                                <MenuItem value="Headphone">
+                                    Headphone
+                                </MenuItem>
                             </Select>
                         </FormControl>
+
                         <TextField
                             required
                             id="item-price"
@@ -159,6 +199,7 @@ export default function Item() {
                             defaultValue=""
                             inputRef={newItemPrice}
                         />
+
                         <TextField
                             required
                             id="item-amount"
@@ -168,9 +209,16 @@ export default function Item() {
                         />
                     </div>
                 </DialogContent>
+
                 <DialogActions>
-                    <Button onClick={closeDialog}>Cancel</Button>
-                    <Button variant="contained" onClick={onAddItem}>
+                    <Button onClick={closeDialog}>
+                        Cancel
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        onClick={onAddItem}
+                    >
                         Add Item
                     </Button>
                 </DialogActions>
