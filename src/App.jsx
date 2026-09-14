@@ -1,8 +1,8 @@
-//src/App.jsx 
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import Item from "./Item";
 import LoginPage from "./Login";
+import User from "./User";
 
 export default function App() {
   return (
@@ -12,6 +12,7 @@ export default function App() {
 
         <Route path="/" element={<Home />}>
           <Route path="item" element={<Item />} />
+          <Route path="user" element={<User />} />
         </Route>
       </Routes>
     </HashRouter>

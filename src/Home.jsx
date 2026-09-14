@@ -37,7 +37,7 @@ export default function Home() {
           >
             Item
           </Button>
-          {user._id == "-1" && (
+          {user && user.id == "-1" && (
             <Button
               color="inherit"
               onClick={() => {

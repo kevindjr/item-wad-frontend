@@ -28,7 +28,7 @@ export function UserProvider({ children }) {
     if (result.ok) {
       const data = await result.json();
       console.log("==>user data: ", data);
-      setUser(data.user);
+      setUser(data);
       setIsLoggedIn(true);
     }
 
@@ -50,9 +50,10 @@ export function UserProvider({ children }) {
     });
 
     if (result.ok) {
-      const data = await result.json();
-      setUser(data.user);
-      setIsLoggedIn(true);
+      await result.json();
+
+      await me();
+
       return true;
     } else {
       const errData = await result.json();
